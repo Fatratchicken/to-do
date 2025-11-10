@@ -1,3 +1,32 @@
-* {
-    background-color: aqua;
+body {
+  height: 100vh;
+}
+
+#grid-container {
+  display: grid;
+  grid-template-areas: "sidebar header" 
+                        "sidebar note";
+  
+  grid-template-columns: minmax(150px, 1fr) 5fr;
+  grid-template-rows: auto 1fr;
+  
+  height: 100%;
+}
+
+#header {
+  background-color: red;
+  
+  grid-area: header;
+}
+
+#sidebar {
+  background-color: black;
+  
+  grid-area: sidebar;
+}
+
+#note{
+  background-color: white;
+  
+  grid-area: note;
 }
