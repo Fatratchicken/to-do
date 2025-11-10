@@ -1,4 +1,4 @@
-#To-Do
+# To-Do
 Simple to-do application.
 
 ## Deploy
