@@ -1,5 +1,5 @@
-# Webpack-Template
-Basic template repo for webpack workflow.
+#To-Do
+Simple to-do application.
 
 ## Deploy
 
