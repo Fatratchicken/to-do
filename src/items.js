@@ -1,25 +1,31 @@
 // code for toDo items:
 class ToDoItem{
-    constructor (title, description, dueDate, priority, notes, complete){
+    constructor (title, description, dueDate, priority){
         this.title = title;
         this.description = description;
 
         this.dueDate = (!!dueDate) ? new Date(dueDate): new Date();
 
         this.priority = priority; 
-        this.notes = notes;
 
-        this.complete = !!complete;
+        // non-paramater:
+        
+        this.complete = false;
         
         this.checkboxArr = [];
+    }
+
+    get header(){
+        return (`Title: ${this.title}, Duedate: ${this.dueDate}`);
     }
 
     printItem(){
         for (const key in this){
             if (key == "checkboxArr"){
                 for (const checkbox of this[key]){
-                    console.log(`checkbox: ${checkbox.title}, checked: ${checkbox.complete}`);
+                    console.log(`\tcheckbox: ${checkbox.title}, checked: ${checkbox.complete}. `);
                 }
+
             }
 
             else{
@@ -27,7 +33,7 @@ class ToDoItem{
             }
         }
     }
-    
+
     completeItemToggle(){
         this.complete = !this.complete;
     }

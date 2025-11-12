@@ -4,6 +4,8 @@ class ToDoProject {
         this.title = title;
         this.color = color;
         this.toDoArr = [];
+
+        projectArr.addToArr(this);
     }
 
     addItemToProject(toDoItem){
@@ -15,7 +17,7 @@ class ToDoProject {
     }
 
     removeFromProject(toDoItem){
-        this.toDoArr.filter((item) => item != toDoItem);
+        this.toDoArr = this.toDoArr.filter((item) => item != toDoItem);
     }
 
     sortProject(){
@@ -34,5 +36,22 @@ class ToDoProject {
 
 }
 
+// IIFE for project list:
+const projectArr = (function(){
+    const arr = [];
 
-export { ToDoProject };
+    const addToArr = function(project){
+        arr.push(project);
+    }
+
+    const removeFromArr = function(project){
+        arr = arr.filter((item) => item != project);
+    }
+
+
+    return { addToArr, removeFromArr};
+
+
+}());
+
+export { ToDoProject, projectArr};

@@ -8,6 +8,8 @@ body {
   height: 100vh;
 }
 
+/* Basic outline: */
+
 #grid-container {
   display: grid;
   grid-template-areas: "sidebar header" 
@@ -32,7 +34,20 @@ body {
 }
 
 #to-do{
+  position: relative;
+  
   background-color: var(--to-do-bg);
   
   grid-area: to-do;
+}
+
+/*  */
+
+#new-to-do{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+
+  font-size: 4rem;
+
 }
