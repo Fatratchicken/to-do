@@ -3,10 +3,12 @@ import "./styles.css";
 import "simple-css-reset";
 
 // native modules: 
-import { ToDoItem  } from "./items";
-import { ToDoProject, projectsArr } from "./projects";
+import { DialogForm } from "./dom-elements";
 
-import { toDoDialog } from "./dom-elements";
+// link main event listeners
+// document.addEventListener('DOMContentLoaded', () => setUpListeners());
 
-document.querySelector("#new-to-do").addEventListener('click', toDoDialog);
-
+const dialog = new DialogForm('id', 'id', 'id', 'legend', document.querySelector('#to-do'));
+dialog.addInput('nigger', 'nigger', 'nigger', 'text', 'nigga');
+dialog.addButton('nigger', 'nigger', 'nigger', 'nigger', 'button');
+dialog.dialog.showModal();
