@@ -2,9 +2,6 @@
 export function setUpListeners(){
 }
 
-class FormLink(){}
-class domInsert(){}
-
 class DialogForm{
     constructor(legendId,  dialogId, formId, legendText, parent){
         this.legend = document.createElement('legend');
@@ -22,7 +19,7 @@ class DialogForm{
         parent.appendChild(this.dialog);
     }
 
-    addInput(fieldsetId, labelText, labelId, inputId, type){
+    addInput(fieldsetId, labelText, labelId, inputId, inputName, type, temporary){
         const fieldset = document.createElement('fieldset');
         fieldset.id = fieldsetId;
 
@@ -35,12 +32,15 @@ class DialogForm{
 
         input.type = type;
         input.id = inputId;
-        input.name = inputId;
+        input.name = inputName;
+
+        if (!!temporary){
+            fieldset.classList.add('temporary');
+        }
 
         fieldset.appendChild(label);
         fieldset.appendChild(input);
         this.form.appendChild(fieldset);
-
     }
 
     addButton(fieldsetId, buttonText, buttonId, type){
@@ -56,8 +56,34 @@ class DialogForm{
         fieldset.appendChild(button);
         this.form.appendChild(fieldset);
     }
+
+    open(){
+        this.dialog.showModal();
+    }
+
+    close(){
+        this.dialog.close();
+
+        // delete temporary controls:
+        const temporaryControls = document.querySelectorAll('.temporary');
+
+        temporaryControls.forEach((control) => {
+            control.remove();
+        })
+
+    }
 }
 
-export { DialogForm };
+const dialog = new DialogForm("legened", "dialog", "form", "New Todo", document.getElementById('to-do'));
+dialog.addInput("input", "Enter: ", "label", "field", "name", "text");
+dialog.addInput("another-input", "temporary", "labelId", 'inputId', 'inputName', 'text', true);
+dialog.addButton("button", "Submit", "button", "button");
+dialog.open();
+
+document.getElementById('button').addEventListener('click', () => dialog.close());
+
+document.getElementById('new-to-do').addEventListener('click', () => dialog.open());
+
+
 
 

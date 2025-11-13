@@ -19,6 +19,18 @@ class ToDoItem{
         return (`Title: ${this.title}, Duedate: ${this.dueDate}`);
     }
 
+    completeItemToggle(){
+        this.complete = !this.complete;
+    }
+
+    changePriority(num){
+        this.priority = num;
+    }
+
+    addCheckbox(title, complete){
+        this.checkboxArr.push(new Checkbox(title, complete));
+    }
+
     printItem(){
         for (const key in this){
             if (key == "checkboxArr"){
@@ -32,18 +44,6 @@ class ToDoItem{
                 console.log(`${key}: ${this[key]}`);
             }
         }
-    }
-
-    completeItemToggle(){
-        this.complete = !this.complete;
-    }
-
-    changePriority(num){
-        this.priority = num;
-    }
-
-    addCheckbox(title, complete){
-        this.checkboxArr.push(new Checkbox(title, complete));
     }
 }
 
