@@ -1,38 +1,19 @@
-// setup event listeners:
-export function setUpListeners(){
-}
+import { ToDoItem } from "./items";
+import { ToDoProject, projectArr } from "./projects";
 
 class DialogForm{
-    constructor(legendId,  dialogId, formId, legendText, parent){
-        this.legend = document.createElement('legend');
-        this.legend.textContent = legendText;
-        
+    constructor(dialogId, formId, parent){
         this.dialog = document.createElement('dialog');
         this.form = document.createElement('form');
 
-        this.legend.id = legendId;
         this.dialog.id = dialogId;
         this.form.id = formId;
 
-        this.inputTypes = {
-            Text: "text",
-            Date: "date",
-            Number: "number"
-        };
-
-        this.buttonTypes = {
-            Button: "button"
-        }
-        
-        this.form.appendChild(this.legend);
         this.dialog.appendChild(this.form);
         parent.appendChild(this.dialog);
     }
 
-    addInput(fieldsetId, labelText, labelId, inputId, inputName, type, temporary){
-        const fieldset = document.createElement('fieldset');
-        fieldset.id = fieldsetId;
-
+    addInput(labelText, labelId, inputId, inputName, type, parent, temporary, editForm){
         const label = document.createElement('label');
         const input = document.createElement('input');
 
@@ -45,26 +26,43 @@ class DialogForm{
         input.name = inputName;
 
         if (!!temporary){
-            fieldset.classList.add('temporary');
+            parent.classList.add('temporary');
         }
 
-        fieldset.appendChild(label);
-        fieldset.appendChild(input);
-        this.form.appendChild(fieldset);
+        parent.appendChild(label);
+        parent.appendChild(input);
+
+        if (!editForm){
+            this.form.appendChild(parent);
+        }
+
     }
 
-    addButton(fieldsetId, buttonText, buttonId, type){
-        const fieldset = document.createElement('fieldset');
-        fieldset.id = fieldsetId;
-
+    addButton(buttonText, buttonId, type, parent){
         const button = document.createElement('button');
 
         button.id = buttonId;
         button.type = type;
         button.textContent = buttonText;
 
-        fieldset.appendChild(button);
-        this.form.appendChild(fieldset);
+        parent.appendChild(button);
+        this.form.appendChild(parent);
+    }
+
+    addLegend(legendId, legendText, parent){
+        const legend = document.createElement('legend');
+        legend.id = legendId;
+        legend.textContent = legendText;
+
+        parent.appendChild(legend);
+        this.form.append(parent);
+    }
+
+    createFieldset(fieldsetId){
+        const fieldset = document.createElement('fieldset');
+        fieldset.id = fieldsetId;
+
+        return fieldset;
     }
 
     open(){
@@ -84,49 +82,87 @@ class DialogForm{
     }
 }
 
-const newToDoForm = (function(){
-    const toDoContainer = document.getElementById('to-do');
-    const dialog = new DialogForm("to-do-legend", "to-do-dialog", "to-do-form", "New Todo", toDoContainer);
-    
-    function init(){
-        dialog.addInput("item-title", "Title: ", "title-label", "title-input", "title", dialog.inputTypes.Text);
-        dialog.addInput("item-description", "Description: ", "description-label", "description-input", "description", dialog.inputTypes.Text);
-        dialog.addInput("item-due-date", "Duedate: ", "duedate-label", "duedate-input", "duedate", dialog.inputTypes.Date);
-        dialog.addInput("item-priority", "Priority: ", "priority-label", "priority-input", "priority", dialog.inputTypes.Number);
 
-        dialog.addButton("checkbox-button", "Add Checkbox", "checkbox-button", dialog.buttonTypes.Button);
+class projectDialog extends DialogForm{
+    constructor(){
+        const projectDialogContainer = document.getElementById("sidebar");
+        super("project-dialog", "project-form", projectDialogContainer);
 
-        dialog.addButton("add-button", "Add", "add-button", dialog.buttonTypes.Button);
-        dialog.addButton("cancel-button", "Cancel", "cancel-button", dialog.buttonTypes.Button);
-    }
-
-    function eventHandlers(){
-        const checkboxButton = document.getElementById("checkbox-button");
-        const addButton = document.getElementById("add-button");
-        const cancelButton = document.getElementById("cancel-button");
-    
-        checkboxButton.addEventListener('click', checkboxAction);
-        addButton.addEventListener('click', addAction);
-        cancelButton.addEventListener('click', cancelAction);
+        this.dialogInit();
+        this.eventHandler();
     }   
 
-    function checkboxAction(){}
-    function addAction(){}
-    function cancelAction(){}
+    dialogInit(){
+        this.addLegend("new-project-legend", "New Project", this.createFieldset("new-project-legend-fieldset"));
+        this.addInput("Name: ", "project-name-label", "project-name-input", "name", "text", this.createFieldset("new-project-name-input"));
 
-    return { init };
-}())    
+        const buttonContainer = this.createFieldset("new-project-button-container");
 
+        this.addButton("Add", "project-add-button", "button", buttonContainer);
+        this.addButton("Cancel", "project-cancel-button", "button", buttonContainer);
+    }
 
-// dialog.addInput("input", "Enter: ", "label", "field", "name", "text");
-// dialog.addInput("another-input", "temporary", "labelId", 'inputId', 'inputName', 'text', true);
-// dialog.addButton("button", "Submit", "button", "button");
-// dialog.open();
+    eventHandler(){
+        const addButton = document.getElementById("project-add-button");
+        const cancelButton = document.getElementById("project-cancel-button");
 
+        addButton.addEventListener('click', () => this.addAction());
+        cancelButton.addEventListener('click', () => this.close());
+    }
 
+    addAction(){
+        console.log("add");
+    }
+}
 
-document.getElementById('new-to-do').addEventListener('click', () => );
+class toDoDialog extends DialogForm{
+    constructor(){
+        const toDoDialogContainer = document.getElementById("to-do");
+        super("to-do-dialog", "to-do-form", toDoDialogContainer);
 
+        this.checkboxIdCount = 1;
 
+        this.dialogInit();
+        this.eventHandler();
+    }
+
+    dialogInit(){
+        this.addLegend("new-to-do-legend", "New To Do", this.createFieldset("new-to-do-legend-fieldset"));
+        this.addInput("Title: ", "to-do-title-label", "to-do-title-input", "title", "text", this.createFieldset("new-to-do-title-input"));
+        this.addInput("Description: ", "to-do-description-label", "to-do-description-input", "description", "text", this.createFieldset("new-to-to-description-input"));
+        this.addInput("Duedate: ", "to-do-dueDate-label", "to-do-dueDate-input", "dueDate", "date", this.createFieldset("new-to-do-dueDate-fieldset"));
+        this.addInput("Priority: ", "to-do-priority-label", "to-do-priority-input",  "priority", "number", this.createFieldset("new-to-do-priority-fieldset"));
+
+        const checkboxContainer =  this.createFieldset("to-do-checkbox-container");
+        this.addButton("Add Checkbox", "to-do-add-checkbox-button", "button",checkboxContainer);
+
+        const buttonContainer = this.createFieldset("new-to-to-button-container");
+        this.addButton("Add", "to-do-add-button", "button", buttonContainer);
+        this.addButton("Cancel", "to-do-cancel-button", "button", buttonContainer);
+    }
+
+    eventHandler(){
+        const addCheckboxButton = document.getElementById("to-do-add-checkbox-button");
+        const addButton = document.getElementById("to-do-add-button");
+        const cancelButton = document.getElementById("to-do-cancel-button");
+
+        addCheckboxButton.addEventListener('click', () => this.addCheckboxAction(document.getElementById("to-do-checkbox-container")));
+        addButton.addEventListener('click', this.addAction);
+        cancelButton.addEventListener('click', () => this.close());
+    }
+
+    addCheckboxAction(EmptyParent){
+        const parent = this.createFieldset(`checkbox-fieldset-${this.checkboxIdCount}`);
+        EmptyParent.appendChild(parent);
+
+        this.addInput("Checkbox: ", `checkbox-label-${this.checkboxIdCount}`, `checkbox-input-${this.checkboxIdCount}`, `checkbox-${this.checkboxIdCount}`, "text", parent, true, true);
+
+        this.checkboxIdCount++;
+    }
+
+    addAction(){
+        console.log("add");
+    }
+}
 
 

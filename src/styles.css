@@ -29,6 +29,7 @@ body {
 
 #sidebar {
   background-color: var(--sidebar-bg);
+  color: white;
   
   grid-area: sidebar;
 }

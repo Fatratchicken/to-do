@@ -48,8 +48,14 @@ const projectArr = (function(){
         arr = arr.filter((item) => item != project);
     }
 
+    const printArr = function(){
+        for (const project of arr){
+            project.printProject();
+        }
+    }   
 
-    return { addToArr, removeFromArr};
+
+    return { addToArr, removeFromArr, printArr, arr};
 
 
 }());
