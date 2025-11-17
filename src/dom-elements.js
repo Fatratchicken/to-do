@@ -38,7 +38,7 @@ class DialogForm{
 
     }
 
-    addButton(buttonText, buttonId, type, parent){
+    addButton(buttonText, buttonId, type, parent, editForm){
         const button = document.createElement('button');
 
         button.id = buttonId;
@@ -46,16 +46,22 @@ class DialogForm{
         button.textContent = buttonText;
 
         parent.appendChild(button);
-        this.form.appendChild(parent);
+
+        if (!editForm){
+            this.form.appendChild(parent);
+        }
     }
 
-    addLegend(legendId, legendText, parent){
+    addLegend(legendId, legendText, parent, editForm){
         const legend = document.createElement('legend');
         legend.id = legendId;
         legend.textContent = legendText;
 
         parent.appendChild(legend);
-        this.form.append(parent);
+
+        if (!editForm){
+            this.form.append(parent);
+        }
     }
 
     createFieldset(fieldsetId){
@@ -95,6 +101,7 @@ class projectDialog extends DialogForm{
     dialogInit(){
         this.addLegend("new-project-legend", "New Project", this.createFieldset("new-project-legend-fieldset"));
         this.addInput("Name: ", "project-name-label", "project-name-input", "name", "text", this.createFieldset("new-project-name-input"));
+        this.addInput("Color: ", "project-color-label", "project-color-input", "color", "text", this.createFieldset("new-project-color-input"));
 
         const buttonContainer = this.createFieldset("new-project-button-container");
 
@@ -111,7 +118,8 @@ class projectDialog extends DialogForm{
     }
 
     addAction(){
-        console.log("add");
+        const linkedProject = new linkProject(this.form);
+        this.close();
     }
 }
 
@@ -147,7 +155,7 @@ class toDoDialog extends DialogForm{
         const cancelButton = document.getElementById("to-do-cancel-button");
 
         addCheckboxButton.addEventListener('click', () => this.addCheckboxAction(document.getElementById("to-do-checkbox-container")));
-        addButton.addEventListener('click', this.addAction);
+        addButton.addEventListener('click', () => this.addAction());
         cancelButton.addEventListener('click', () => this.close());
     }
 
@@ -161,8 +169,33 @@ class toDoDialog extends DialogForm{
     }
 
     addAction(){
-        console.log("add");
+        const linkedItem = new linkItem(this.form);
+        this.close();
     }
 }
 
+
+class linkItem{
+    constructor(form){
+        this.data = new FormData(form);
+        this.item = new ToDoItem(this.data.get("title"), this.data.get("description"), this.data.get("dueDate").split('-'), this.data.get("priority"));
+
+        this.linkCheckbox();
+    }
+
+    linkCheckbox(){
+        for (const data of this.data.entries()){
+            if (data[0].includes("checkbox")){
+                this.item.addCheckbox(data[1]);
+            }
+        }
+    }
+}
+
+class linkProject{
+    constructor(form){
+        this.data = new FormData(form);
+        this.project = new ToDoProject(this.data.get("name"), this.data.get("color"));
+    }
+}
 
