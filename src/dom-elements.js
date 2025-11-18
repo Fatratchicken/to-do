@@ -275,18 +275,25 @@ class displayProjects{
     display(){
         for (const project of this.projectArr){
             project.sortProject();
-            
-            const title = document.createElement('h1');
-            title.textContent = project.title;
 
-            this.parent.appendChild(title);
-
-            for (const todo of project.toDoArr){
-                const todoTitle = document.createElement('p');
-                todoTitle.textContent = `__${todo.title}`;
-
-                this.parent.appendChild(todoTitle);
+            if (project.toDoArr.length == 0 && project.title == 'default' && this.projectArr.length > 1){
+                this.projectArr = this.projectArr.filter(project => project.title != "default");
             }
+
+            else{
+                const title = document.createElement('h1');
+                title.textContent = project.title;
+
+                this.parent.appendChild(title);
+
+                for (const todo of project.toDoArr){
+                    const todoTitle = document.createElement('button');
+                    todoTitle.textContent = `__${todo.title}`;
+
+                    this.parent.appendChild(todoTitle);
+                }
+            }
+
         }
     }
 }

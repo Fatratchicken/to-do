@@ -30,7 +30,6 @@ body {
 #sidebar {
   background-color: var(--sidebar-bg);
   color: white;
-  
   grid-area: sidebar;
 }
 
@@ -56,3 +55,8 @@ footer{
   font-size: 4rem;
 }
 
+#sidebar button{
+  font-size: 3rem;
+  display: block;
+  color: white;
+}
