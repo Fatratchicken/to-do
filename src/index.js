@@ -3,8 +3,11 @@ import "./styles.css";
 import "simple-css-reset";
 
 // native modules: 
-import { DialogForm } from "./dom-elements";
+import { projectDialog, toDoDialog } from "./dom-elements";
 
-// link main event listeners
-// document.addEventListener('DOMContentLoaded', () => setUpListeners());
 
+const tdDialog = new toDoDialog();
+const pjDialog = new projectDialog();
+
+document.getElementById('new-to-do').addEventListener('click', () => tdDialog.open());
+document.getElementById('new-project').addEventListener('click', () => pjDialog.open());

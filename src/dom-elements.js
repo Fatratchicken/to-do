@@ -91,7 +91,7 @@ class DialogForm{
 
 class projectDialog extends DialogForm{
     constructor(){
-        const projectDialogContainer = document.getElementById("sidebar");
+        const projectDialogContainer = document.querySelector('body');
         super("project-dialog", "project-form", projectDialogContainer);
 
         this.dialogInit();
@@ -119,13 +119,20 @@ class projectDialog extends DialogForm{
 
     addAction(){
         const linkedProject = new linkProject(this.form);
+        toDoDialog.currentProject = linkedProject.project;
+
+        const projectDisplay = new displayProjects(projectArr);
+        projectDisplay.display();
+
         this.close();
     }
 }
 
 class toDoDialog extends DialogForm{
+    static currentProject = new ToDoProject('default', 'blue');
+
     constructor(){
-        const toDoDialogContainer = document.getElementById("to-do");
+        const toDoDialogContainer = document.querySelector('body');
         super("to-do-dialog", "to-do-form", toDoDialogContainer);
 
         this.checkboxIdCount = 1;
@@ -170,6 +177,14 @@ class toDoDialog extends DialogForm{
 
     addAction(){
         const linkedItem = new linkItem(this.form);
+        toDoDialog.currentProject.addItemToProject(linkedItem.item);
+
+        const projectDisplay = new displayProjects(projectArr);
+        projectDisplay.display();
+
+        const display = new displayItem(linkedItem.item);
+        display.display();
+
         this.close();
     }
 }
@@ -199,3 +214,81 @@ class linkProject{
     }
 }
 
+class displayItem{
+    constructor(item){
+        this.item = item;
+        this.parent = document.getElementById('to-do');
+        this.header = document.getElementById('header');
+
+        this.parent.innerHTML = '';
+    }
+
+    display(){
+        this.header.textContent = this.item.title;
+
+        const descriptionDom = document.createElement('p');
+        descriptionDom.textContent = this.item.description;
+        this.parent.appendChild(descriptionDom);
+
+        const dueDateDom = document.createElement('p');
+        dueDateDom.textContent = this.item.dueDate;
+        this.parent.appendChild(dueDateDom);
+
+        const priorityDom = document.createElement('p');
+        priorityDom.textContent = this.item.priority;
+        this.parent.appendChild(priorityDom);
+
+        this.checkboxDisplay();
+    }
+
+    checkboxDisplay(){
+        let checkboxIdCount = 1;
+
+        for (const checkbox of this.item.checkboxArr){
+            const checkboxDom = document.createElement('input');
+            const label = document.createElement('label');
+
+            label.textContent = checkbox.title;
+            
+            checkboxDom.id = `checkbox-dom-${checkboxIdCount}`;
+            checkboxDom.type = "checkbox";
+
+            label.htmlFor = checkboxDom.id;
+
+            this.parent.appendChild(label);
+            this.parent.appendChild(checkboxDom);
+
+            checkboxIdCount++;
+        }
+    }
+}
+
+
+class displayProjects{
+    constructor(projectArr){
+        this.projectArr = projectArr.arr;
+        this.parent = document.getElementById('sidebar');
+
+        this.parent.innerHTML = '';
+    }
+
+    display(){
+        for (const project of this.projectArr){
+            project.sortProject();
+            
+            const title = document.createElement('h1');
+            title.textContent = project.title;
+
+            this.parent.appendChild(title);
+
+            for (const todo of project.toDoArr){
+                const todoTitle = document.createElement('p');
+                todoTitle.textContent = `__${todo.title}`;
+
+                this.parent.appendChild(todoTitle);
+            }
+        }
+    }
+}
+
+export { toDoDialog, projectDialog }

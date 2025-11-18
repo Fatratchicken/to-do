@@ -43,12 +43,16 @@ body {
 }
 
 /*  */
+footer{
+  display: flex;
 
-#new-to-do{
   position: absolute;
   bottom: 0;
   right: 0;
-
-  font-size: 4rem;
-
 }
+
+#new-to-do, #new-project{
+  padding: 10px;
+  font-size: 4rem;
+}
+
