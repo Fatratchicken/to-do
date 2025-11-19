@@ -50,7 +50,7 @@ footer{
   right: 0;
 }
 
-#new-to-do, #new-project{
+#new-to-do, #new-project, #edit-to-do{
   padding: 10px;
   font-size: 4rem;
 }

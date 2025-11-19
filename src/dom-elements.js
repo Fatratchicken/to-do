@@ -189,13 +189,87 @@ class toDoDialog extends DialogForm{
     }
 }
 
+class editDialog extends DialogForm{
+    constructor(){
+        const editDialogContainer = document.querySelector('body');
+        super("edit-dialog", "edit-form", editDialogContainer);
+
+        this.dialogInit();
+        this.eventHandler();
+    }
+
+    dialogInit(){
+        this.addLegend("edi-to-do-legend", "Edit To Do", this.createFieldset("edit-to-do-legend-fieldset"));
+        this.addInput("Title: ", "edit-title-label", "edit-title-input", "title", "text", this.createFieldset("edit-to-do-title-input"));
+        this.addInput("Description: ", "edit-description-label", "edit-description-input", "description", "text", this.createFieldset("edit-to-to-description-input"));
+        this.addInput("Duedate: ", "edit-dueDate-label", "edit-dueDate-input", "dueDate", "date", this.createFieldset("edit-to-do-dueDate-fieldset"));
+        this.addInput("Priority: ", "edit-priority-label", "edit-priority-input",  "priority", "number", this.createFieldset("edit-to-do-priority-fieldset"));
+
+
+        const buttonContainer = this.createFieldset("edit-to-to-button-container");
+        this.addButton("Edit", "to-do-edit-button", "button", buttonContainer);
+        this.addButton("Cancel", "edit-cancel-button", "button", buttonContainer);
+    }
+
+    eventHandler(){
+        const editButton = document.getElementById("to-do-edit-button");
+        const cancelButton = document.getElementById("edit-cancel-button");
+
+        editButton.addEventListener('click', () => this.editAction());
+        cancelButton.addEventListener('click', () => this.cancelAction());
+    }
+
+    editAction(){
+        const linkedItem = new linkItem(this.form, true);
+
+        if (linkItem.currentItem != ''){
+            const projectDisplay = new displayProjects(projectArr);
+            projectDisplay.display();
+
+            const display = new displayItem(linkItem.currentItem);
+            display.display();
+
+
+        }
+
+        this.close();
+
+    }
+
+    cancelAction(){
+        this.close();
+    }
+}
+
 
 class linkItem{
-    constructor(form){
-        this.data = new FormData(form);
-        this.item = new ToDoItem(this.data.get("title"), this.data.get("description"), this.data.get("dueDate").split('-'), this.data.get("priority"));
+    static currentItem = '';
 
-        this.linkCheckbox();
+    constructor(form, isEdit){
+        this.data = new FormData(form);
+
+        if (!isEdit){
+            this.item = new ToDoItem(this.data.get("title"), this.data.get("description"), this.data.get("dueDate").split('-'), this.data.get("priority"));
+            linkItem.currentItem = this.item;
+            
+            this.linkCheckbox();
+        }
+
+        else{
+            if (linkItem.currentItem == ''){
+                return;
+
+            }
+
+            else{
+                linkItem.currentItem.title = (this.data.get("title")) == '' ?  linkItem.currentItem.title: this.data.get("title");
+                linkItem.currentItem.description = (this.data.get("description")) == '' ? linkItem.currentItem.description: this.data.get("description");
+                linkItem.currentItem.dueDate = this.data.get("dueDate").split("-") == '' ? linkItem.currentItem.dueDate: this.data.get("dueDate");
+                linkItem.currentItem.priority = this.data.get("priority") == '' ? linkItem.currentItem.priority: this.data.get("priority");
+            }
+
+        }
+
     }
 
     linkCheckbox(){
@@ -298,4 +372,4 @@ class displayProjects{
     }
 }
 
-export { toDoDialog, projectDialog }
+export { toDoDialog, projectDialog, editDialog }
