@@ -363,6 +363,7 @@ class displayProjects{
                 for (const todo of project.toDoArr){
                     const todoTitle = document.createElement('button');
                     todoTitle.textContent = `__${todo.title}`;
+                    todoTitle.dataset.id = todo.uuid;
 
                     this.parent.appendChild(todoTitle);
                 }
@@ -372,4 +373,4 @@ class displayProjects{
     }
 }
 
-export { toDoDialog, projectDialog, editDialog }
+export { toDoDialog, projectDialog, editDialog, linkItem, displayItem, displayProjects }

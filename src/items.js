@@ -13,6 +13,8 @@ class ToDoItem{
         this.complete = false;
         
         this.checkboxArr = [];
+
+        this.uuid = crypto.randomUUID();
     }
 
     get header(){
