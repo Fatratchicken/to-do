@@ -5,6 +5,8 @@ class ToDoProject {
         this.color = color;
         this.toDoArr = [];
 
+        this.uuid = crypto.randomUUID();
+        
         projectArr.addToArr(this);
     }
 

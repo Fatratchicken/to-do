@@ -355,8 +355,9 @@ class displayProjects{
             }
 
             else{
-                const title = document.createElement('h1');
+                const title = document.createElement('button');
                 title.textContent = project.title;
+                title.dataset.projectId = project.uuid;
 
                 this.parent.appendChild(title);
 

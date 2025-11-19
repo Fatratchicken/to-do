@@ -34,4 +34,13 @@ document.getElementById('sidebar').addEventListener('click', (event) => {
             }
         }
     }
+
+    // for project selection:
+    if (target.dataset.projectId){
+        for (const project of projectArr.arr){
+            if (project.uuid == target.dataset.projectId){
+                toDoDialog.currentProject = project;
+            }
+        }
+    }
 })
