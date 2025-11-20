@@ -40,14 +40,18 @@ class ToDoProject {
 
 // IIFE for project list:
 const projectArr = (function(){
-    const arr = [];
+    let arr = [];
 
     const addToArr = function(project){
         arr.push(project);
     }
 
     const removeFromArr = function(project){
-        arr = arr.filter((item) => item != project);
+        const index = arr.findIndex((item) => item.uuid === project.uuid);
+        
+        if (index !== -1) {
+            arr.splice(index, 1); // Modify the array in place
+        }    
     }
 
     const printArr = function(){
